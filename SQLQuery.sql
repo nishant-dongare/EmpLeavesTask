@@ -1,14 +1,21 @@
+use master;
+go
+ alter database Task1 set single_user with rollback immediate
+
+ drop database Task1
+
 Create database Task1;
 GO
 
 USE Task1;
 GO
 
---DROP TABLE Employee;
+DROP TABLE Employee;
 CREATE TABLE Employee(
 	emp_id int primary key identity,
     ename varchar(100),
 	email varchar(100),
+    passkey varchar(20),
 	contact decimal(10,0),
 	doj VARCHAR(20)
 );
@@ -17,15 +24,16 @@ GO
 SELECT * FROM Employee;
 Go
 
-ALTER PROCEDURE CreateEmployee
+CREATE PROCEDURE CreateEmployee
     @Name VARCHAR(100),
     @Email VARCHAR(100),
+    @Passkey varchar(20),
     @Contact DECIMAL(10,0),
     @DOJ DATETIME
 AS
 BEGIN
-    INSERT INTO Employee (ename,email, contact, doj)
-    VALUES (@Name,@Email, @Contact, @DOJ);
+    INSERT INTO Employee (ename,email,passkey, contact, doj)
+    VALUES (@Name,@Email,@Passkey, @Contact, @DOJ);
     SELECT SCOPE_IDENTITY();
 END;
 GO
@@ -51,10 +59,11 @@ BEGIN
 END;
 GO
 
-ALTER PROCEDURE UpdateEmployee
+CREATE PROCEDURE UpdateEmployee
     @emp_id INT,
     @ename VARCHAR(100),
     @Email VARCHAR(100),
+    @Passkey VARCHAR(20),
     @Contact DECIMAL(10,0),
     @Doj VARCHAR(20)
 AS
@@ -77,6 +86,7 @@ GO
 
 
 DROP TABLE LeaveApplication;
+GO
 CREATE TABLE LeaveApplication(
     id int primary key identity,
     fromdate VARCHAR(20),
@@ -89,7 +99,7 @@ CREATE TABLE LeaveApplication(
 );
 GO
 
-ALTER PROCEDURE InsertLeaveApplication
+CREATE PROCEDURE InsertLeaveApplication
     @fromdate VARCHAR(20),
     @todate VARCHAR(20),
     @reason VARCHAR(255),
@@ -107,3 +117,4 @@ BEGIN
     -- Get the ID of the newly inserted row
     SET @newId = SCOPE_IDENTITY();
 END;
+GO

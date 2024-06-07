@@ -67,35 +67,50 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="addemp.aspx" />
-    <Content Include="FetchEmp.aspx" />
+    <Content Include="EmpLeaveApply.aspx" />
+    <Content Include="HrAddEmp.aspx" />
+    <Content Include="HrFetchEmp.aspx" />
     <Content Include="LeaveApplication.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="User.aspx" />
-    <Content Include="viewemp.aspx" />
+    <Content Include="HrViewEmp.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="addemp.aspx.cs">
-      <DependentUpon>addemp.aspx</DependentUpon>
+    <Compile Include="EmpLeaveApply.aspx.cs">
+      <DependentUpon>EmpLeaveApply.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="addemp.aspx.designer.cs">
-      <DependentUpon>addemp.aspx</DependentUpon>
+    <Compile Include="EmpLeaveApply.aspx.designer.cs">
+      <DependentUpon>EmpLeaveApply.aspx</DependentUpon>
     </Compile>
-    <Compile Include="FetchEmp.aspx.cs">
-      <DependentUpon>FetchEmp.aspx</DependentUpon>
+    <Compile Include="Employee.Master.cs">
+      <DependentUpon>Employee.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FetchEmp.aspx.designer.cs">
-      <DependentUpon>FetchEmp.aspx</DependentUpon>
+    <Compile Include="Employee.Master.designer.cs">
+      <DependentUpon>Employee.Master</DependentUpon>
     </Compile>
-    <Compile Include="hr.Master.cs">
-      <DependentUpon>hr.Master</DependentUpon>
+    <Compile Include="HrAddEmp.aspx.cs">
+      <DependentUpon>HrAddEmp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="hr.Master.designer.cs">
-      <DependentUpon>hr.Master</DependentUpon>
+    <Compile Include="HrAddEmp.aspx.designer.cs">
+      <DependentUpon>HrAddEmp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HrFetchEmp.aspx.cs">
+      <DependentUpon>HrFetchEmp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HrFetchEmp.aspx.designer.cs">
+      <DependentUpon>HrFetchEmp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Hr.Master.cs">
+      <DependentUpon>Hr.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Hr.Master.designer.cs">
+      <DependentUpon>Hr.Master</DependentUpon>
     </Compile>
     <Compile Include="LeaveApplication.aspx.cs">
       <DependentUpon>LeaveApplication.aspx</DependentUpon>
@@ -119,16 +134,17 @@
     <Compile Include="User.aspx.designer.cs">
       <DependentUpon>User.aspx</DependentUpon>
     </Compile>
-    <Compile Include="viewemp.aspx.cs">
-      <DependentUpon>viewemp.aspx</DependentUpon>
+    <Compile Include="HrViewEmp.aspx.cs">
+      <DependentUpon>HrViewEmp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="viewemp.aspx.designer.cs">
-      <DependentUpon>viewemp.aspx</DependentUpon>
+    <Compile Include="HrViewEmp.aspx.designer.cs">
+      <DependentUpon>HrViewEmp.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hr.Master" />
+    <Content Include="Hr.Master" />
+    <Content Include="Employee.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

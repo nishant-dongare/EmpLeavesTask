@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="hr.master.cs" Inherits="EmpLeavesTask.hr" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Hr.Master.cs" Inherits="EmpLeavesTask.hr" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,13 +23,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="AddEmployee.aspx">Add Employee</a>
+                            <a class="nav-link" href="HrAddEmp.aspx">Add Employee</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="viewemp.aspx">View Employees</a>
+                            <a class="nav-link" href="HrViewEmp.aspx">View Employees</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="FetchEmp.aspx">Fetch Employee</a>
+                            <a class="nav-link" href="HrFetchEmp.aspx">Fetch Employee</a>
                         </li>
                     </ul>
                 </div>

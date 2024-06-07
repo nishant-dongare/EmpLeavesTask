@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -9,20 +11,22 @@ namespace EmpLeavesTask
 {
     public partial class Login : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
+        private string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        protected void Page_Load(object sender, EventArgs e) { }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = txtUsername.Text;
+            string uid = txtUsername.Text;
             string password = txtPassword.Text;
 
-            if (IsValidUser(username, password))
+            if (isAdmin(uid, password))
             {
                 // Redirect to a different page upon successful login
-                Response.Redirect("addemp.aspx");
+                Response.Redirect("HrFetchEmp.aspx");
+            }
+            else if (isValidUser(uid))
+            {
+                Response.Redirect("EmpLeaveApply.aspx");
             }
             else
             {
@@ -31,10 +35,23 @@ namespace EmpLeavesTask
             }
         }
 
-        private bool IsValidUser(string username, string password)
+        private bool isAdmin(string uid, string password)
         {
             // Replace with your actual user validation logic
-            return username == "admin" && password == "password";
+            return uid == "admin" && password == "admin";
         }
+        private bool isValidUser(string uid)
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand($@"SELECT * FROM Employee WHERE email='{uid}'", con))
+                {
+                    con.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+        }
+
     }
 }
