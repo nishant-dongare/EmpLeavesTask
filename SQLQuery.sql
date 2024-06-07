@@ -84,22 +84,25 @@ CREATE TABLE LeaveApplication(
     reason varchar(255),
     month int,
     year int,
+    countofleaves INT,
     emp_id int references Employee(emp_id)
 );
 GO
-CREATE PROCEDURE InsertLeaveApplication
+
+ALTER PROCEDURE InsertLeaveApplication
     @fromdate VARCHAR(20),
     @todate VARCHAR(20),
     @reason VARCHAR(255),
     @month INT,
     @year INT,
     @emp_id INT,
+    @countofleaves INT,
     @newId INT OUTPUT
 AS
 BEGIN
     -- Insert the new leave application
-    INSERT INTO LeaveApplication (fromdate, todate, reason, month, year, emp_id)
-    VALUES (@fromdate, @todate, @reason, @month, @year, @emp_id);
+    INSERT INTO LeaveApplication (fromdate, todate, reason, month, year, emp_id,countofleaves)
+    VALUES (@fromdate, @todate, @reason, @month, @year, @emp_id,@countofleaves);
     
     -- Get the ID of the newly inserted row
     SET @newId = SCOPE_IDENTITY();

@@ -34,39 +34,30 @@ namespace EmpLeavesTask
                 int toMonth = toDate.Month;
                 int toYear = toDate.Year;
 
-                int firstMonthLeaves = 0, secondMonthLeaves = 0,absentLeaves=0;
-
                 // You can now use fromMonth, fromYear, toMonth, and toYear as needed
                 // For example, you might display them in a Label or use them in further processing
                 //Response.Write($"From Date: {fromMonth}/{fromYear}<br/>To Date: {toMonth}/{toYear}");
 
                 int allowedLeaves = 2;
-                int usedLeaves;
+                int extraLeaves=0;
                 if (fromYear == toYear && fromMonth == toMonth) {
-                    usedLeaves = GetUsedLeaves(empId, fromMonth, fromYear);
+                    int WorkingDays = CalculateWorkingDays(fromDate, toDate);
+                    int remainingLeaves = GetRemainingLeaves(empId, fromMonth, fromYear);
+                    extraLeaves = WorkingDays > remainingLeaves ? WorkingDays - remainingLeaves : 0;
                 }
                 else
                 {
-                    firstMonthLeaves = GetUsedLeaves(empId, fromMonth, fromYear);
-                    secondMonthLeaves = GetUsedLeaves(empId, toMonth, toYear);
+                    int m1 = CalculateWorkingDays(fromDate,fromDate) - GetRemainingLeaves(empId, fromMonth, fromYear);
+                    int m2 = CalculateWorkingDays(new DateTime(toYear, toMonth, 1), toDate) - GetRemainingLeaves(empId, toMonth, toYear);
 
-                    int m1 = allowedLeaves > firstMonthLeaves ? allowedLeaves - firstMonthLeaves : 0;
-                    int m2 = allowedLeaves > secondMonthLeaves ? allowedLeaves - secondMonthLeaves : 0;
+                    m1 = m1 < 0 ? 0 : m1;
+                    m2 = m2 < 0 ? 0 : m2;
 
-                    m1 = GetRemainingDaysInMonth(fromDate)-allowedLeaves;
-                    m2 = GetRemainingDaysInMonth(toDate) - allowedLeaves;
-                    absentLeaves = m1 + m2;
-
-
+                    extraLeaves = m1 + m2;
                 }
-                int workingDays = CalculateWorkingDays(fromDate, toDate);
-                int remailningLeaves = allowedLeaves > usedLeaves? allowedLeaves-usedLeaves: 0;
 
-
-                int extraLeaves = workingDays - remailningLeaves;
-
-                // Calculate salary deduction (example: $100 per extra leave)
                 double salaryDeduction = extraLeaves > 0 ? extraLeaves * (30000 / 30) : 0;
+                Response.Write(salaryDeduction);
 
             }
             else
@@ -103,21 +94,31 @@ namespace EmpLeavesTask
         }
 
 
-        private int GetUsedLeaves(int empId, int month, int year)
+        private int GetRemainingLeaves(int empId, int month, int year)
         {
             int usedLeaves = 0;
             string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT COUNT(*) FROM EmployeeLeave WHERE emp_id = @EmpId AND MONTH(leave_date) = @Month AND YEAR(leave_date) = @Year";
+                string query = "SELECT countofleaves FROM LeaveApplication WHERE emp_id = @EmpId"; 
+
+                //string query = "SELECT COUNT(*) FROM LeaveApplication WHERE emp_id = @EmpId AND MONTH(fromdate) = @Month AND YEAR(fromdate) = @Year";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@EmpId", empId);
-                command.Parameters.AddWithValue("@Month", month);
-                command.Parameters.AddWithValue("@Year", year);
+                //command.Parameters.AddWithValue("@Month", month);
+                //command.Parameters.AddWithValue("@Year", year);
                 connection.Open();
-                usedLeaves = (int)command.ExecuteScalar();
+                object result = command.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    usedLeaves = (int)result;
+                }
+                else
+                {
+                    usedLeaves = 0; // or handle the null case appropriately
+                }
             }
-            return usedLeaves;
+            return usedLeaves>2?0:2-usedLeaves;
         }
 
         private int GetRemainingDaysInMonth(DateTime date)
@@ -125,9 +126,7 @@ namespace EmpLeavesTask
             int daysInMonth = DateTime.DaysInMonth(date.Year, date.Month);
             DateTime lastDayOfMonth = new DateTime(date.Year, date.Month, daysInMonth);
             int remainingDays = (lastDayOfMonth - date).Days;
-            return remainingDays;
+            return remainingDays+1;
         }
-
-
     }
 }
