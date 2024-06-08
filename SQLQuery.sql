@@ -24,7 +24,7 @@ GO
 SELECT * FROM Employee;
 Go
 
-CREATE PROCEDURE CreateEmployee
+CREATE PROCEDURE AddEmployee
     @Name VARCHAR(100),
     @Email VARCHAR(100),
     @Passkey varchar(20),

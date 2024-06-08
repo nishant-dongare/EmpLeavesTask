@@ -21,6 +21,7 @@ namespace EmpLeavesTask
         {
             string employeeName = txtEmployeeName.Text;
             string employeeEmail = txtEmployeeEmail.Text;
+            string employeePass = txtPassword.Text;
             decimal employeeContact;
             string doj = txtDOJ.Text;
 
@@ -32,12 +33,13 @@ namespace EmpLeavesTask
 
             if (!string.IsNullOrEmpty(employeeName) && !string.IsNullOrEmpty(employeeEmail) && !string.IsNullOrEmpty(doj))
             {
-                bool isSuccess = AddEmployee(employeeName, employeeEmail, employeeContact, doj);
+                bool isSuccess = AddEmployee(employeeName, employeeEmail, employeePass, employeeContact, doj);
                 if (isSuccess)
                 {
                     ltAddEmployeeMessage.Text = "<div class='alert alert-success'>Employee added successfully!</div>";
                     txtEmployeeName.Text = string.Empty;
                     txtEmployeeEmail.Text = string.Empty;
+                    txtPassword.Text = string.Empty;
                     txtEmployeeContact.Text = string.Empty;
                     txtDOJ.Text = string.Empty;
                 }
@@ -53,17 +55,12 @@ namespace EmpLeavesTask
         }
 
 
-        public bool AddEmployee(string name, string email, decimal contact, string doj)
+        public bool AddEmployee(string name, string email,string pass, decimal contact, string doj)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Employee (ename, email, contact, doj) VALUES (@Name, @Email, @Contact, @DOJ)", con))
+                using (SqlCommand cmd = new SqlCommand($@"EXEC AddEmployee '{name}','{email}','{pass}','{contact}','{doj}'", con))
                 {
-                    cmd.Parameters.AddWithValue("@Name", name);
-                    cmd.Parameters.AddWithValue("@Email", email);
-                    cmd.Parameters.AddWithValue("@Contact", contact);
-                    cmd.Parameters.AddWithValue("@DOJ", doj);
-
                     con.Open();
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;

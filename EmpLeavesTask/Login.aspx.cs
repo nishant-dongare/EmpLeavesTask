@@ -11,7 +11,8 @@ namespace EmpLeavesTask
 {
     public partial class Login : System.Web.UI.Page
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        int result;
         protected void Page_Load(object sender, EventArgs e) { }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -24,9 +25,9 @@ namespace EmpLeavesTask
                 // Redirect to a different page upon successful login
                 Response.Redirect("HrFetchEmp.aspx");
             }
-            else if (isValidUser(uid))
+            else if (isValidUser(uid, out result))
             {
-                Response.Redirect("EmpLeaveApply.aspx");
+                Response.Redirect($@"EmpLeaveApply.aspx?empId={result}");
             }
             else
             {
@@ -40,14 +41,14 @@ namespace EmpLeavesTask
             // Replace with your actual user validation logic
             return uid == "admin" && password == "admin";
         }
-        private bool isValidUser(string uid)
+        private bool isValidUser(string uid,out int result)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand($@"SELECT * FROM Employee WHERE email='{uid}'", con))
+                using (SqlCommand cmd = new SqlCommand($@"SELECT emp_id FROM Employee WHERE email='{uid}'", con))
                 {
                     con.Open();
-                    int result = cmd.ExecuteNonQuery();
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
                     return result > 0;
                 }
             }

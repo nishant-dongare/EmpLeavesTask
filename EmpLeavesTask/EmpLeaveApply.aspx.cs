@@ -16,7 +16,7 @@ namespace EmpLeavesTask
         {
             if (!this.IsPostBack)
             {
-                empId = int.Parse(Request.QueryString["id"]);
+                empId = int.Parse(Request.QueryString["empId"]);
             }
         }
 
