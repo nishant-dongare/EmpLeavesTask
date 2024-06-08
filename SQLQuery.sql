@@ -85,17 +85,22 @@ END
 GO
 
 
-DROP TABLE LeaveApplication;
+TRUNCATE TABLE LeaveApplication;
+GO
+
+SELECT * FROM LeaveApplication;
 GO
 CREATE TABLE LeaveApplication(
-    id int primary key identity,
+    leave_id int primary key identity,
     fromdate VARCHAR(20),
     todate VARCHAR(20),
     reason varchar(255),
-    month int,
-    year int,
+    month INT,
+    year INT,
     countofleaves INT,
-    emp_id int references Employee(emp_id)
+    emp_id INT references Employee(emp_id),
+    combine_id INT,
+    leave_status varchar(10)
 );
 GO
 
@@ -103,18 +108,37 @@ CREATE PROCEDURE InsertLeaveApplication
     @fromdate VARCHAR(20),
     @todate VARCHAR(20),
     @reason VARCHAR(255),
-    @month INT,
-    @year INT,
-    @emp_id INT,
+    @month int,
+    @year int,
     @countofleaves INT,
-    @newId INT OUTPUT
+    @emp_id INT,
+    @combine_id INT
 AS
 BEGIN
     -- Insert the new leave application
-    INSERT INTO LeaveApplication (fromdate, todate, reason, month, year, emp_id,countofleaves)
-    VALUES (@fromdate, @todate, @reason, @month, @year, @emp_id,@countofleaves);
+    INSERT INTO LeaveApplication (fromdate, todate, reason, month, year,countofleaves, emp_id,combine_id,leave_status)
+    VALUES (@fromdate, @todate, @reason, @month, @year,@countofleaves,@emp_id,@combine_id,'Requested');
     
     -- Get the ID of the newly inserted row
-    SET @newId = SCOPE_IDENTITY();
+    SELECT SCOPE_IDENTITY();
 END;
 GO
+
+CREATE PROCEDURE GetEmployeeLeaveRequests
+AS
+BEGIN
+    SELECT e.ename, e.email, l.reason, l.fromdate, l.todate, l.leave_status,l.leave_id
+    FROM Employee e
+    INNER JOIN LeaveApplication l ON e.emp_id = l.emp_id;
+END;
+GO
+
+CREATE PROCEDURE UpdateLeaveStatus
+    @RequestId INT,
+    @NewStatus VARCHAR(50)
+AS
+BEGIN
+    UPDATE LeaveApplication
+    SET leave_status = @NewStatus
+    WHERE leave_id = @RequestId;
+END

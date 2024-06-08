@@ -4,6 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-4">
+        <asp:Literal ID="ltMessage" runat="server" EnableViewState="False"></asp:Literal>
+
         <div class="mb-3">
             <label for="txtreason" class="form-label">Reason</label>
             <asp:TextBox ID="txtreason" runat="server" TextMode="MultiLine" CssClass="form-control"></asp:TextBox>
