@@ -71,6 +71,7 @@
     <Content Include="HrAddEmp.aspx" />
     <Content Include="HrFetchEmp.aspx" />
     <Content Include="HrLeaveApprove.aspx" />
+    <Content Include="HrOfferLetter.aspx" />
     <Content Include="LeaveApplication.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="User.aspx" />
@@ -119,6 +120,13 @@
     </Compile>
     <Compile Include="HrLeaveApprove.aspx.designer.cs">
       <DependentUpon>HrLeaveApprove.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HrOfferLetter.aspx.cs">
+      <DependentUpon>HrOfferLetter.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HrOfferLetter.aspx.designer.cs">
+      <DependentUpon>HrOfferLetter.aspx</DependentUpon>
     </Compile>
     <Compile Include="LeaveApplication.aspx.cs">
       <DependentUpon>LeaveApplication.aspx</DependentUpon>

@@ -55,13 +55,29 @@ namespace EmpLeavesTask
                             </div>
                         </div>";
                         ltEmployeeDetails.Text = employeeDetails;
+                        /*if (employee != null)
+                        {
+                            ltEmployeeDetails.Text = $"Employee ID: {employee.EmpId}, Email: {employee.Email}";*/
+                            PanelActionButtons.Visible = true; // Show the action buttons
+                        /*}
+                        else
+                        {
+                            ltEmployeeDetails.Text = "Employee not found.";
+                            PanelActionButtons.Visible = false; // Hide the action buttons
+                        }*/
                     }
                     else
                     {
+                        PanelActionButtons.Visible = false;
                         ltEmployeeDetails.Text = "<div class='alert alert-warning'>No employee found with the given ID.</div>";
                     }
                 }
             }
+        }
+        protected void btnGenerateOffer_Click(object sender, EventArgs e)
+        {
+            Response.Redirect($@"HrOfferLetter.aspx?empId={txtEmployeeId.Text}");
+
         }
     }
 }
