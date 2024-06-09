@@ -34,7 +34,7 @@ namespace EmpLeavesTask
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Employee WHERE emp_id = @EmployeeId", con))
+                using (SqlCommand cmd = new SqlCommand("EXEC GetEmployeeLeaveApplications @EmployeeId", con))
                 {
                     cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
 
@@ -52,32 +52,17 @@ namespace EmpLeavesTask
                                 <p class='card-text'>Email: {reader["email"]}</p>
                                 <p class='card-text'>Contact: {reader["contact"]}</p>
                                 <p class='card-text'>Date of Joining: {reader["doj"]}</p>
+                                <p class='card-text'>Total Leaves: {reader["countofleaves"]}</p>
                             </div>
                         </div>";
                         ltEmployeeDetails.Text = employeeDetails;
-                        /*if (employee != null)
-                        {
-                            ltEmployeeDetails.Text = $"Employee ID: {employee.EmpId}, Email: {employee.Email}";*/
-                            PanelActionButtons.Visible = true; // Show the action buttons
-                        /*}
-                        else
-                        {
-                            ltEmployeeDetails.Text = "Employee not found.";
-                            PanelActionButtons.Visible = false; // Hide the action buttons
-                        }*/
                     }
                     else
                     {
-                        PanelActionButtons.Visible = false;
                         ltEmployeeDetails.Text = "<div class='alert alert-warning'>No employee found with the given ID.</div>";
                     }
                 }
             }
-        }
-        protected void btnGenerateOffer_Click(object sender, EventArgs e)
-        {
-            Response.Redirect($@"HrOfferLetter.aspx?empId={txtEmployeeId.Text}");
-
         }
     }
 }

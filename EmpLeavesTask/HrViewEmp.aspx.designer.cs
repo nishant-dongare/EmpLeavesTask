@@ -11,7 +11,7 @@ namespace EmpLeavesTask
 {
 
 
-    public partial class viewemp
+    public partial class HrViewEmp
     {
 
         /// <summary>

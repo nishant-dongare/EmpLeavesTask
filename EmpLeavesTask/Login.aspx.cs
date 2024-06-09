@@ -28,6 +28,7 @@ namespace EmpLeavesTask
             else if (isValidUser(uid, out result))
             {
                 Session["empId"] = result;
+                Session["uid"] = uid;
                 Response.Redirect($@"EmpLeaveApply.aspx?empId={result}");
             }
             else

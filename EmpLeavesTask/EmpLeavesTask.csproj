@@ -43,6 +43,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -68,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="EmpLeaveApply.aspx" />
+    <Content Include="EmpOfferLetterView.aspx" />
     <Content Include="HrAddEmp.aspx" />
     <Content Include="HrFetchEmp.aspx" />
     <Content Include="HrLeaveApprove.aspx" />
@@ -92,6 +99,13 @@
     </Compile>
     <Compile Include="Employee.Master.designer.cs">
       <DependentUpon>Employee.Master</DependentUpon>
+    </Compile>
+    <Compile Include="EmpOfferLetterView.aspx.cs">
+      <DependentUpon>EmpOfferLetterView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmpOfferLetterView.aspx.designer.cs">
+      <DependentUpon>EmpOfferLetterView.aspx</DependentUpon>
     </Compile>
     <Compile Include="HrAddEmp.aspx.cs">
       <DependentUpon>HrAddEmp.aspx</DependentUpon>

@@ -51,7 +51,6 @@ namespace EmpLeavesTask
                 // For example, you might display them in a Label or use them in further processing
                 //Response.Write($"From Date: {fromMonth}/{fromYear}<br/>To Date: {toMonth}/{toYear}");
 
-                int allowedLeaves = 2;
                 int extraLeaves = 0;
                 if (fromYear == toYear && fromMonth == toMonth)
                 {

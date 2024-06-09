@@ -22,9 +22,6 @@
                             <div id="employeeDetails" class="mt-4">
                                 <asp:Literal ID="ltEmployeeDetails" runat="server" EnableViewState="False"></asp:Literal>
                             </div>
-                            <asp:Panel ID="PanelActionButtons" runat="server" Visible="False" CssClass="mt-4">
-                                <asp:Button ID="btnGenerateOffer" runat="server" Text="Generate Offer" CssClass="btn btn-success"  OnClick="btnGenerateOffer_Click"/>
-                            </asp:Panel>
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>

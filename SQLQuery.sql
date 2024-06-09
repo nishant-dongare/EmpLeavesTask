@@ -84,7 +84,7 @@ BEGIN
 END
 GO
 
-
+-------------------------------------------------------------------------------------------------------------------------------------
 TRUNCATE TABLE LeaveApplication;
 GO
 
@@ -133,6 +133,17 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE GetEmployeeLeaveApplications
+    @EmployeeId INT
+AS
+BEGIN
+    SELECT *
+    FROM Employee e
+    INNER JOIN LeaveApplication l ON e.emp_id = l.emp_id
+    WHERE e.emp_id = @EmployeeId;
+END;
+Go
+
 CREATE PROCEDURE UpdateLeaveStatus
     @RequestId INT,
     @NewStatus VARCHAR(50)
@@ -142,3 +153,15 @@ BEGIN
     SET leave_status = @NewStatus
     WHERE leave_id = @RequestId;
 END
+------------------------------------------------------------------------------------------------------------------
+drop table OfferLetters;
+CREATE TABLE OfferLetters(
+    offer_id INT PRIMARY KEY IDENTITY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    contact decimal(10,0),
+    doj VARCHAR(20),
+    filepath varchar(100)
+);
+
+select * from OfferLetters;
