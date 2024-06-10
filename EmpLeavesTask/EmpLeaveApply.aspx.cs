@@ -55,8 +55,8 @@ namespace EmpLeavesTask
                 if (fromYear == toYear && fromMonth == toMonth)
                 {
 
-                    int WorkingDays = CalculateWorkingDays(fromDate, toDate);
-                    int remainingLeaves = GetRemainingLeaves(empId, fromMonth, fromYear);
+                    int WorkingDays = LeaveCalculations.CalculateWorkingDays(fromDate, toDate);
+                    int remainingLeaves = LeaveCalculations.GetRemainingLeaves(empId, fromMonth, fromYear);
                     extraLeaves = WorkingDays > remainingLeaves ? WorkingDays - remainingLeaves : 0;
 
                     string query = $@"EXEC InsertLeaveApplication '{fromDate}','{toDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{WorkingDays}','{empId}','0'";
@@ -80,10 +80,10 @@ namespace EmpLeavesTask
                 {
                     DateTime lastDateOfFromDate = new DateTime(fromYear, fromMonth, DateTime.DaysInMonth(fromYear, fromMonth));
                     DateTime newMonthDate = new DateTime(toYear, toMonth, 1);
-                    int m1WorkingDays = CalculateWorkingDays(fromDate, lastDateOfFromDate);
-                    int m2WorkingDays = CalculateWorkingDays(newMonthDate, toDate);
-                    int m1 = m1WorkingDays - GetRemainingLeaves(empId, fromMonth, fromYear);
-                    int m2 = m2WorkingDays - GetRemainingLeaves(empId, toMonth, toYear);
+                    int m1WorkingDays = LeaveCalculations.CalculateWorkingDays(fromDate, lastDateOfFromDate);
+                    int m2WorkingDays = LeaveCalculations.CalculateWorkingDays(newMonthDate, toDate);
+                    int m1 = m1WorkingDays - LeaveCalculations.GetRemainingLeaves(empId, fromMonth, fromYear);
+                    int m2 = m2WorkingDays - LeaveCalculations.GetRemainingLeaves(empId, toMonth, toYear);
 
                     m1 = m1 < 0 ? 0 : m1;
                     m2 = m2 < 0 ? 0 : m2;
@@ -131,60 +131,6 @@ namespace EmpLeavesTask
                 }
             }
             return 0;
-        }
-
-        private int CalculateWorkingDays(DateTime from, DateTime to)
-        {
-            // Ensure from is always less than or equal to to
-            /* if (from > to)
-             {
-                 DateTime temp = from;
-                 from = to;
-                 to = temp;
-             }
-             int totalDays = (int)(to - from).TotalDays + 1;
-             */
-
-            int workingDays = 0;
-            DateTime currentDay = from;
-            while (currentDay <= to)
-            {
-                if (currentDay.DayOfWeek != DayOfWeek.Saturday && currentDay.DayOfWeek != DayOfWeek.Sunday)
-                {
-                    workingDays++;
-                }
-                currentDay = currentDay.AddDays(1);
-            }
-            return workingDays;
-        }
-
-
-        private int GetRemainingLeaves(int empId, int month, int year)
-        {
-            int usedLeaves = 0;
-            string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "SELECT countofleaves FROM LeaveApplication WHERE emp_id = @EmpId";
-
-                //string query = "SELECT COUNT(*) FROM LeaveApplication WHERE emp_id = @EmpId AND MONTH(fromdate) = @Month AND YEAR(fromdate) = @Year";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@EmpId", empId);
-                //command.Parameters.AddWithValue("@Month", month);
-                //command.Parameters.AddWithValue("@Year", year);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                if (result != null && result != DBNull.Value)
-                {
-                    usedLeaves = (int)result;
-                }
-                else
-                {
-                    usedLeaves = 0; // or handle the null case appropriately
-                }
-            }
-            return usedLeaves > 2 ? 0 : 2 - usedLeaves;
-        }
+        }        
     }
-
 }

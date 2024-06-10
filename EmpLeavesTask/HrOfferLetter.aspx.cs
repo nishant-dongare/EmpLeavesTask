@@ -38,6 +38,10 @@ namespace EmpLeavesTask
 
             // Optionally, you can also email the PDF here
             SaveOfferLetterDetails(name, email,contact, doj, filePath);
+            string directoryPath = Server.MapPath("~/OfferLetters/");
+            string filepath1 = Path.Combine(directoryPath, email+".pdf");
+            EmailManager.SendEmailWithPDF(email, filepath1);
+            ClientScript.RegisterStartupScript(this.GetType(), "Success", "alert('Offer letter emailed successfully.');", true);
         }
 
 
