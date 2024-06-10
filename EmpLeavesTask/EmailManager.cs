@@ -13,8 +13,8 @@ namespace EmpLeavesTask
         {
             string fromEmail = "nishantdongare2001@gmail.com";
             string fileName = $"{email}.pdf";
-            string subject = "Your Payslip Letter";
-            string body = "Dear Candidate,\n\nPlease find attached your Payslip.\n\nBest regards,\nYour Company";
+            string subject = "Letter";
+            string body = "Dear Candidate,\n\nPlease find your Attchment.\n\nBest regards,\nYour Company";
             //string directoryPath = Server.MapPath("~/Payslips/");
             //string filePath = Path.Combine(directoryPath, fileName);
 

@@ -11,6 +11,9 @@ using System.Web.UI.WebControls;
 using System.IO;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using Org.BouncyCastle.Utilities.Collections;
+using System.Drawing;
 
 namespace EmpLeavesTask
 {
@@ -40,7 +43,7 @@ namespace EmpLeavesTask
 
             txtTotalWorkingDays.Text = LeaveCalculations.CalculateWorkingDays(firstDayOfLastMonth, lastDayOfLastMonth).ToString();
 
-            txtLeavesTaken.Text = LeaveCalculations.GetRemainingLeaves(int.Parse(txtEmpNo.Text), firstDayOfLastMonth.Month, firstDayOfLastMonth.Year).ToString();
+            txtLeavesTaken.Text = LeaveCalculations.GetBalanceLeaves(int.Parse(txtEmpNo.Text), firstDayOfLastMonth.Month, firstDayOfLastMonth.Year).ToString();
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -69,7 +72,7 @@ namespace EmpLeavesTask
         protected void btnCalculate_Click(object sender, EventArgs e)
         {
             // Calculate the salary based on input values
-            int monthlySalary = int.Parse(txtMonthlySalary.Text);
+            int monthlySalary = 30000;
             int totalWorkingDays = int.Parse(txtTotalWorkingDays.Text);
             int leavesTaken = int.Parse(txtLeavesTaken.Text);
 
@@ -79,35 +82,63 @@ namespace EmpLeavesTask
             lblCalculatedSalary.Text = calculatedSalary.ToString();
         }
 
-        /*protected void btnGeneratePDF_Click(object sender, EventArgs e)
+        protected void Download_Invoice(object sender, EventArgs e)
         {
-        }*/
+            // Path to save the PDF on the server
+            string folderPath = Server.MapPath("~/Payslips/");
+            string fileName = $@"Payslip_{txtEmail.Text}.pdf"; // Unique file name
+            string filePath = Path.Combine(folderPath, fileName);
 
-        protected void btnGeneratePDF_Click(object sender, EventArgs e)
-        {
-            // Convert Panel content to string
-            StringWriter stringWriter = new StringWriter();
-            HtmlTextWriter htmlTextWriter = new HtmlTextWriter(stringWriter);
-            Panel1.RenderControl(htmlTextWriter);
-            string panelContent = stringWriter.ToString();
-
-            // Create PDF document
-            Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(Server.MapPath("~/PanelContent.pdf"), FileMode.Create));
-            pdfDoc.Open();
-            using (StringReader sr = new StringReader(panelContent))
+            // Ensure the directory exists
+            if (!Directory.Exists(folderPath))
             {
-                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                Directory.CreateDirectory(folderPath);
             }
-            pdfDoc.Close();
 
-            // Download the PDF file
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;filename=PanelContent.pdf");
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.WriteFile(Server.MapPath("~/PanelContent.pdf"));
-            Response.End();
+            // Create the PDF document and write to the specified file path
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter writer = new HtmlTextWriter(sw);
+            Panel1.RenderControl(writer);
+            StringReader stringReader = new StringReader(sw.ToString());
+            Document pdfDoc = new Document(PageSize.A4, 101, 10f, 100f, 0f);
+            HTMLWorker worker = new HTMLWorker(pdfDoc);
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                PdfWriter.GetInstance(pdfDoc, fs);
+                pdfDoc.Open();
+                worker.Parse(stringReader);
+                pdfDoc.Close();
+            }
+            //Save into database
+            SavePayslip($@"~/Payslips/{fileName}");
+
+            // For example, display a message to the user:
+            Response.Write("<script>alert('Payslip Generated Successfully!');</script>");
         }
+
+        private void SavePayslip(string filePath)
+        {
+
+            DateTime lastMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO Payslips(month, year, emp_id, filepath) VALUES(@Month, @Year, @Empid, @Filepath)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Month", lastMonth.Month);
+                    command.Parameters.AddWithValue("@Year", lastMonth.Year);
+                    command.Parameters.AddWithValue("@Empid", txtEmpNo.Text);
+                    command.Parameters.AddWithValue("@FilePath", filePath);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+        }
+
+
 
         public override void VerifyRenderingInServerForm(Control control)
         {

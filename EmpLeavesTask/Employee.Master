@@ -28,6 +28,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="EmpOfferLetterView.aspx">Offer Letters</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="EmpPayslip.aspx">Payslips</a>
+                        </li>
+                        <li class="nav-item">
+                            <asp:LinkButton ID="LoginButton" runat="server" CssClass="nav-link" OnClick="Logout_Click">Logout</asp:LinkButton>
+                        </li>
                     </ul>
                 </div>
             </nav>

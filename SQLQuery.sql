@@ -165,3 +165,27 @@ CREATE TABLE OfferLetters(
 );
 
 select * from OfferLetters;
+
+------------------------------------------------------------------------------------------------------------------
+CREATE TABLE Payslips(
+    payslip_id INT PRIMARY KEY IDENTITY,
+    month VARCHAR(100),
+    year VARCHAR(100),
+    emp_id INT references Employee(emp_id),
+    filepath VARCHAR(100)
+);
+GO
+
+SELECT * FROM Payslips;
+go
+
+CREATE PROCEDURE InsertPayslip
+    @month VARCHAR(100),
+    @year VARCHAR(100),
+    @emp_id INT,
+    @filepath VARCHAR(100)
+AS
+BEGIN
+    INSERT INTO Payslips (month, year, emp_id, filepath)
+    VALUES (@month, @year, @emp_id, @filepath);
+END;

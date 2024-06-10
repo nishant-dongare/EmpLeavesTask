@@ -37,7 +37,7 @@ namespace EmpLeavesTask
         }
 
 
-        public static int GetRemainingLeaves(int empId, int month, int year)
+        public static int GetBalanceLeaves(int empId, int month, int year)
         {
             int usedLeaves = 0;
             string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;

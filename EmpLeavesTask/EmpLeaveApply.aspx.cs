@@ -56,7 +56,7 @@ namespace EmpLeavesTask
                 {
 
                     int WorkingDays = LeaveCalculations.CalculateWorkingDays(fromDate, toDate);
-                    int remainingLeaves = LeaveCalculations.GetRemainingLeaves(empId, fromMonth, fromYear);
+                    int remainingLeaves = LeaveCalculations.GetBalanceLeaves(empId, fromMonth, fromYear);
                     extraLeaves = WorkingDays > remainingLeaves ? WorkingDays - remainingLeaves : 0;
 
                     string query = $@"EXEC InsertLeaveApplication '{fromDate}','{toDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{WorkingDays}','{empId}','0'";
@@ -82,8 +82,8 @@ namespace EmpLeavesTask
                     DateTime newMonthDate = new DateTime(toYear, toMonth, 1);
                     int m1WorkingDays = LeaveCalculations.CalculateWorkingDays(fromDate, lastDateOfFromDate);
                     int m2WorkingDays = LeaveCalculations.CalculateWorkingDays(newMonthDate, toDate);
-                    int m1 = m1WorkingDays - LeaveCalculations.GetRemainingLeaves(empId, fromMonth, fromYear);
-                    int m2 = m2WorkingDays - LeaveCalculations.GetRemainingLeaves(empId, toMonth, toYear);
+                    int m1 = m1WorkingDays - LeaveCalculations.GetBalanceLeaves(empId, fromMonth, fromYear);
+                    int m2 = m2WorkingDays - LeaveCalculations.GetBalanceLeaves(empId, toMonth, toYear);
 
                     m1 = m1 < 0 ? 0 : m1;
                     m2 = m2 < 0 ? 0 : m2;
