@@ -36,12 +36,19 @@ namespace EmpLeavesTask
             //Response.Write(s);
             string filePath = "OfferLetters/" + email + ".pdf";
 
-            // Optionally, you can also email the PDF here
+            //Stores into db
             SaveOfferLetterDetails(name, email,contact, doj, filePath);
+
+            // Optionally, you can also email the PDF here
             string directoryPath = Server.MapPath("~/OfferLetters/");
             string filepath1 = Path.Combine(directoryPath, email+".pdf");
-            EmailManager.SendEmailWithPDF(email, filepath1);
-            ClientScript.RegisterStartupScript(this.GetType(), "Success", "alert('Offer letter emailed successfully.');", true);
+            if (EmailManager.SendEmailWithPDF(email, filepath1))
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "Success", "alert('Offer letter emailed successfully.');", true);
+            }
+            else {
+                ClientScript.RegisterStartupScript(this.GetType(), "Error", $"alert('Error sending email');", true);
+            }
         }
 
 

@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace EmpLeavesTask
 {
@@ -25,7 +27,6 @@ namespace EmpLeavesTask
             // Fetch and display employee details based on entered Emp No.
             // Example data fetching:
 
-            txtEmpName.Text = "John Doe";
             txtBankName.Text = "ABC Bank";
             txtContactNo.Text = "1234567890";
             txtBankAccountNo.Text = "1234567890123456";
@@ -33,6 +34,13 @@ namespace EmpLeavesTask
             txtDesignation.Text = "Software Engineer";
             txtDOJ.Text = "01/01/2020";
             txtMonthlySalary.Text = "30000";
+            DateTime today = DateTime.Today;
+            DateTime firstDayOfLastMonth = new DateTime(today.Year, today.Month, 1).AddMonths(-1);
+            DateTime lastDayOfLastMonth = new DateTime(today.Year, today.Month, 1).AddDays(-1);
+
+            txtTotalWorkingDays.Text = LeaveCalculations.CalculateWorkingDays(firstDayOfLastMonth, lastDayOfLastMonth).ToString();
+
+            txtLeavesTaken.Text = LeaveCalculations.GetRemainingLeaves(int.Parse(txtEmpNo.Text), firstDayOfLastMonth.Month, firstDayOfLastMonth.Year).ToString();
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -71,8 +79,39 @@ namespace EmpLeavesTask
             lblCalculatedSalary.Text = calculatedSalary.ToString();
         }
 
+        /*protected void btnGeneratePDF_Click(object sender, EventArgs e)
+        {
+        }*/
+
         protected void btnGeneratePDF_Click(object sender, EventArgs e)
         {
+            // Convert Panel content to string
+            StringWriter stringWriter = new StringWriter();
+            HtmlTextWriter htmlTextWriter = new HtmlTextWriter(stringWriter);
+            Panel1.RenderControl(htmlTextWriter);
+            string panelContent = stringWriter.ToString();
+
+            // Create PDF document
+            Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(Server.MapPath("~/PanelContent.pdf"), FileMode.Create));
+            pdfDoc.Open();
+            using (StringReader sr = new StringReader(panelContent))
+            {
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+            }
+            pdfDoc.Close();
+
+            // Download the PDF file
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=PanelContent.pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.WriteFile(Server.MapPath("~/PanelContent.pdf"));
+            Response.End();
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            // To avoid the exception "Control 'Panel1' of type 'Panel' must be placed inside a form tag with runat=server."
         }
 
     }

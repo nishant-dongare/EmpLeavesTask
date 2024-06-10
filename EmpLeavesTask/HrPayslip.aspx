@@ -23,7 +23,7 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
+    <asp:Panel ID="Panel1" runat="server" class="container">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Employee Details</h3>
@@ -86,5 +86,5 @@
                 <asp:Button ID="btnGeneratePDF" runat="server" Text="Generate to PDF" CssClass="btn btn-secondary" OnClick="btnGeneratePDF_Click" />
             </div>
         </div>
-    </div>
+    </asp:Panel>
 </asp:Content>
