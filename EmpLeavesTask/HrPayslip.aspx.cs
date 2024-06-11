@@ -43,7 +43,6 @@ namespace EmpLeavesTask
 
             txtTotalWorkingDays.Text = LeaveCalculations.CalculateWorkingDays(firstDayOfLastMonth, lastDayOfLastMonth).ToString();
 
-            txtLeavesTaken.Text = LeaveCalculations.GetBalanceLeaves(int.Parse(txtEmpNo.Text), firstDayOfLastMonth.Month, firstDayOfLastMonth.Year).ToString();
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -63,7 +62,29 @@ namespace EmpLeavesTask
                     }
                     else
                     {
+                        Response.Write("<script>alert('Employee data is not fetching!');</script>");
 
+                    }
+                    rdr.Close();
+                }
+                using (SqlCommand cmd = new SqlCommand($@"SELECT countofleaves from LeaveApplication WHERE emp_id = @EmployeeId", con))
+                {
+                    cmd.Parameters.AddWithValue("@EmployeeId", txtEmpNo.Text);
+                    //con.Open();
+                    object result = cmd.ExecuteScalar();
+
+                    if (result!=null)
+                    {
+                        txtLeavesTaken.Text = result.ToString();
+                        txtBalanceLeaves.Text = (2 - Convert.ToInt32(result)).ToString();
+                        if (Convert.ToInt32(txtBalanceLeaves.Text) < 0)
+                        {
+                            txtBalanceLeaves.Text = "0";
+                        }
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Leave count is not fetching!');</script>");
                     }
                 }
             }
@@ -76,7 +97,7 @@ namespace EmpLeavesTask
             int totalWorkingDays = int.Parse(txtTotalWorkingDays.Text);
             int leavesTaken = int.Parse(txtLeavesTaken.Text);
 
-            int salaryPerDay = monthlySalary / totalWorkingDays;
+            int salaryPerDay = monthlySalary / 30;
             int calculatedSalary = monthlySalary - (salaryPerDay * leavesTaken);
 
             lblCalculatedSalary.Text = calculatedSalary.ToString();
@@ -113,13 +134,13 @@ namespace EmpLeavesTask
             //Save into database
             SavePayslip($@"~/Payslips/{fileName}");
 
+
             // For example, display a message to the user:
             Response.Write("<script>alert('Payslip Generated Successfully!');</script>");
         }
 
         private void SavePayslip(string filePath)
         {
-
             DateTime lastMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

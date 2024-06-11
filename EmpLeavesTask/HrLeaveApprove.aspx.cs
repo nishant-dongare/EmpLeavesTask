@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -11,6 +13,8 @@ namespace EmpLeavesTask
 {
     public partial class HrLeaveApprove : System.Web.UI.Page
     {
+        private string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -41,6 +45,48 @@ namespace EmpLeavesTask
                     cmd.Parameters.AddWithValue("@RequestId", requestId);
                     cmd.Parameters.AddWithValue("@NewStatus", newStatus);
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /*public int LeaveCountIncrement(int empId) {
+            using (SqlCommand cmd = new SqlCommand($@"SELECT countofleaves from LeaveApplication WHERE emp_id = @EmployeeId", con))
+            {
+                cmd.Parameters.AddWithValue("@EmployeeId", empId);
+                //con.Open();
+                object result = cmd.ExecuteScalar();
+
+                if (result != null)
+                {
+                    txtLeavesTaken.Text = result.ToString();
+                    txtBalanceLeaves.Text = (2 - Convert.ToInt32(result)).ToString();
+                    if (Convert.ToInt32(txtBalanceLeaves.Text) < 0)
+                    {
+                        txtBalanceLeaves.Text = "0";
+                    }
+                }
+                else
+                {
+                    Response.Write("<script>alert('Leave count is not fetching!');</script>");
+                }
+            }
+        }*/
+
+        public int FetchLeaveCount(int empId) {
+            using (SqlCommand cmd = new SqlCommand($@"SELECT countofleaves from LeaveApplication WHERE emp_id = @EmployeeId", new SqlConnection(connectionString)))
+            {
+                cmd.Parameters.AddWithValue("@EmployeeId", empId);
+                //con.Open();
+                object result = cmd.ExecuteScalar();
+
+                if (result != null)
+                {
+                    return Convert.ToInt32(result);
+                }
+                else
+                {
+                    //Response.Write("<script>alert('Leave count is not fetching!');</script>");
+                    return 0;
                 }
             }
         }

@@ -18,43 +18,6 @@ namespace EmpLeavesTask
 
         }
 
-        /*protected void btnViewPayslip_Click(object sender, EventArgs e)
-        {
-            string month = txtMonth.Text.Trim();
-            string year = txtYear.Text.Trim();
-            int empId;
-            if (!int.TryParse(txtEmpID.Text.Trim(), out empId))
-            {
-                litMessage.Text = "Invalid Employee ID";
-                return;
-            }
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand("GetPayslipFilepath", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@month", month);
-                    command.Parameters.AddWithValue("@year", year);
-                    command.Parameters.AddWithValue("@emp_id", empId);
-
-                    connection.Open();
-                    object result = command.ExecuteScalar();
-                    connection.Close();
-
-                    if (result != null)
-                    {
-                        string filepath = result.ToString();
-                        litMessage.Text = $"<a href='{filepath}' target='_blank'>View Payslip</a>";
-                    }
-                    else
-                    {
-                        litMessage.Text = "Payslip not found.";
-                    }
-                }
-            }
-        }*/
-
         protected void gvPayslips_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -69,7 +32,7 @@ namespace EmpLeavesTask
                     litDownload.Text = $"<a href ='{ResolveUrl(filepath)}' class='btn btn-primary' download>Download</a>";
 
                 }
-}
+            }
         }
     }
 }
