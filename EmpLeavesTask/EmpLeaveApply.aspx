@@ -19,8 +19,9 @@
             <asp:TextBox ID="tb_todate" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
         </div>
         <div class="mb-3">
-            <label for="Label5" class="form-label">Balance</label>
             <asp:Label ID="Label5" runat="server" CssClass="form-text"></asp:Label>
+        </div><div class="mb-3">
+            <asp:Label ID="totalleaves_lbl" runat="server" CssClass="form-text"></asp:Label>
         </div>
         <div class="mb-3">
             <asp:Button ID="Button1" runat="server" OnClick="OnSubmit" Text="Submit" CssClass="btn btn-primary" />

@@ -19,6 +19,11 @@ namespace EmpLeavesTask
             if (!this.IsPostBack)
             {
                 empId = Convert.ToInt32(Request.QueryString["empId"]);
+                int balanceLeaves = LeaveCalculations.GetBalanceLeaves(empId, DateTime.Today.Month, DateTime.Today.Year);
+                balanceLeaves = balanceLeaves > 2 ? balanceLeaves - 2 : 2 - balanceLeaves;
+                balanceLeaves = balanceLeaves < 0 ? 0 : balanceLeaves;
+                Label5.Text = "Balance : " + balanceLeaves;
+                totalleaves_lbl.Text = LeaveCalculations.TotalLeaves(empId, DateTime.Today.Month, DateTime.Today.Year).ToString();
             }
         }
 
@@ -47,10 +52,6 @@ namespace EmpLeavesTask
                 int toMonth = toDate.Month;
                 int toYear = toDate.Year;
 
-                // You can now use fromMonth, fromYear, toMonth, and toYear as needed
-                // For example, you might display them in a Label or use them in further processing
-                //Response.Write($"From Date: {fromMonth}/{fromYear}<br/>To Date: {toMonth}/{toYear}");
-
                 int extraLeaves = 0;
                 if (fromYear == toYear && fromMonth == toMonth)
                 {
@@ -60,20 +61,14 @@ namespace EmpLeavesTask
                     extraLeaves = WorkingDays > remainingLeaves ? WorkingDays - remainingLeaves : 0;
 
                     string query = $@"EXEC InsertLeaveApplication '{fromDate}','{toDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{WorkingDays}','{empId}','0'";
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+
+                    if (InsertIntoDB(query) > 0)
                     {
-                        conn.Open();
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            if (cmd.ExecuteNonQuery() > 0)
-                            {
-                                ltMessage.Text = "<div class='alert alert-success'>Employee added successfully!</div>";
-                            }
-                            else
-                            {
-                                ltMessage.Text = "<div class='alert alert-danger'>Task Failed Successfully.</div>";
-                            }
-                        }
+                        ltMessage.Text = "<div class='alert alert-success'>Leave Requested Successfully</div>";
+                    }
+                    else
+                    {
+                        ltMessage.Text = "<div class='alert alert-danger'>Task Failed Successfully.</div>";
                     }
                 }
                 else
@@ -93,9 +88,8 @@ namespace EmpLeavesTask
                     int result = InsertIntoDB($@"EXEC InsertLeaveApplication '{fromDate}','{lastDateOfFromDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{m1WorkingDays}','{empId}','0'");
                     if (result > 0)
                     {
-                        InsertIntoDB($@"EXEC InsertLeaveApplication '{newMonthDate}','{toDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{m1WorkingDays}','{empId}','{result}'");
-                        ltMessage.Text = "<div class='alert alert-success'>Employee added successfully!</div>";
-
+                        InsertIntoDB($@"EXEC InsertLeaveApplication '{newMonthDate}','{toDate}','{txtreason.Text}','{toDate.Month}','{toDate.Year}','{m1WorkingDays}','{empId}','{result}'");
+                        ltMessage.Text = "<div class='alert alert-success'>Leave Requested Successfully</div>";
                     }
                     else
                     {
@@ -110,7 +104,6 @@ namespace EmpLeavesTask
             }
             else
             {
-                // Handle invalid date input
                 Response.Write("Invalid date input.");
             }
 
@@ -124,6 +117,7 @@ namespace EmpLeavesTask
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     object result = cmd.ExecuteScalar();
+                    conn.Close();
                     if (result != null && result != DBNull.Value)
                     {
                         return Convert.ToInt32(result);
@@ -131,6 +125,6 @@ namespace EmpLeavesTask
                 }
             }
             return 0;
-        }        
+        }
     }
 }

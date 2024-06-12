@@ -30,7 +30,6 @@ namespace EmpLeavesTask
                 {
                     litMessage.Text = $"<a href='{ResolveUrl(filepath)}' target='_blank'>View Payslip</a>";
                     litDownload.Text = $"<a href ='{ResolveUrl(filepath)}' class='btn btn-primary' download>Download</a>";
-
                 }
             }
         }

@@ -13,12 +13,15 @@ namespace EmpLeavesTask
 {
     public partial class HrLeaveApprove : System.Web.UI.Page
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        SqlConnection conn;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+            conn = new SqlConnection(connectionString);
+            conn.Open();
         }
+
         protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Approve" || e.CommandName == "Reject")
@@ -35,17 +38,12 @@ namespace EmpLeavesTask
 
         private void UpdateLeaveStatus(int requestId, string newStatus)
         {
-            string connectionString = WebConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("UpdateLeaveStatus", conn))
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UpdateLeaveStatus", conn))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@RequestId", requestId);
-                    cmd.Parameters.AddWithValue("@NewStatus", newStatus);
-                    cmd.ExecuteNonQuery();
-                }
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@RequestId", requestId);
+                cmd.Parameters.AddWithValue("@NewStatus", newStatus);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -72,8 +70,9 @@ namespace EmpLeavesTask
             }
         }*/
 
-        public int FetchLeaveCount(int empId) {
-            using (SqlCommand cmd = new SqlCommand($@"SELECT countofleaves from LeaveApplication WHERE emp_id = @EmployeeId", new SqlConnection(connectionString)))
+        public int FetchLeaveCount(int empId)
+        {
+            using (SqlCommand cmd = new SqlCommand("EXEC GetCountOfLeaves @EmployeeId", conn))
             {
                 cmd.Parameters.AddWithValue("@EmployeeId", empId);
                 //con.Open();

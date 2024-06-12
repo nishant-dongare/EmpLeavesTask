@@ -18,14 +18,14 @@ namespace EmpLeavesTask
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string uid = txtUsername.Text;
-            string password = txtPassword.Text;
+            string pass = txtPassword.Text;
 
-            if (isAdmin(uid, password))
+            if (isAdmin(uid, pass))
             {
                 // Redirect to a different page upon successful login
                 Response.Redirect("HrFetchEmp.aspx");
             }
-            else if (isValidUser(uid, out result))
+            else if (isValidUser(uid,pass, out result))
             {
                 Session["empId"] = result;
                 Session["uid"] = uid;
@@ -33,21 +33,20 @@ namespace EmpLeavesTask
             }
             else
             {
-                // Show an error message
                 ltMessage.Text = "<div class='alert alert-danger'>Invalid username or password</div>";
             }
         }
 
         private bool isAdmin(string uid, string password)
         {
-            // Replace with your actual user validation logic
             return uid == "admin" && password == "admin";
         }
-        private bool isValidUser(string uid,out int result)
+
+        private bool isValidUser(string uid,string passkey,out int result)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand($@"SELECT emp_id FROM Employee WHERE email='{uid}'", con))
+                using (SqlCommand cmd = new SqlCommand($@"SELECT emp_id FROM Employee WHERE email='{uid}' AND passkey='{passkey}'", con))
                 {
                     con.Open();
                     result = Convert.ToInt32(cmd.ExecuteScalar());

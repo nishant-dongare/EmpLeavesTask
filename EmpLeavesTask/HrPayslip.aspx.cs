@@ -14,15 +14,19 @@ using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using Org.BouncyCastle.Utilities.Collections;
 using System.Drawing;
+using Org.BouncyCastle.Ocsp;
 
 namespace EmpLeavesTask
 {
     public partial class HrPayslip : System.Web.UI.Page
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-
+        SqlConnection conn;
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+            conn = new SqlConnection(connectionString);
+            conn.Open();
         }
 
         protected void btnGetDetails_Click(object sender, EventArgs e)
@@ -44,59 +48,36 @@ namespace EmpLeavesTask
             txtTotalWorkingDays.Text = LeaveCalculations.CalculateWorkingDays(firstDayOfLastMonth, lastDayOfLastMonth).ToString();
 
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("EXEC GetEmployeeById @EmployeeId", conn))
             {
-                using (SqlCommand cmd = new SqlCommand("EXEC GetEmployeeById @EmployeeId", con))
+                cmd.Parameters.AddWithValue("@EmployeeId", txtEmpNo.Text);
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                if (rdr.HasRows)
                 {
-                    cmd.Parameters.AddWithValue("@EmployeeId", txtEmpNo.Text);
-                    con.Open();
-                    SqlDataReader rdr = cmd.ExecuteReader();
-
-                    if (rdr.HasRows)
-                    {
-                        rdr.Read();
-                        txtEmpName.Text = rdr["ename"].ToString();
-                        txtContactNo.Text = rdr["contact"].ToString();
-                        txtEmail.Text = rdr["email"].ToString();
-                        txtDOJ.Text = rdr["doj"].ToString();
-                    }
-                    else
-                    {
-                        Response.Write("<script>alert('Employee data is not fetching!');</script>");
-
-                    }
-                    rdr.Close();
+                    rdr.Read();
+                    txtEmpName.Text = rdr["ename"].ToString();
+                    txtContactNo.Text = rdr["contact"].ToString();
+                    txtEmail.Text = rdr["email"].ToString();
+                    txtDOJ.Text = rdr["doj"].ToString();
                 }
-                using (SqlCommand cmd = new SqlCommand($@"SELECT countofleaves from LeaveApplication WHERE emp_id = @EmployeeId", con))
+                else
                 {
-                    cmd.Parameters.AddWithValue("@EmployeeId", txtEmpNo.Text);
-                    //con.Open();
-                    object result = cmd.ExecuteScalar();
-
-                    if (result!=null)
-                    {
-                        txtLeavesTaken.Text = result.ToString();
-                        txtBalanceLeaves.Text = (2 - Convert.ToInt32(result)).ToString();
-                        if (Convert.ToInt32(txtBalanceLeaves.Text) < 0)
-                        {
-                            txtBalanceLeaves.Text = "0";
-                        }
-                    }
-                    else
-                    {
-                        Response.Write("<script>alert('Leave count is not fetching!');</script>");
-                    }
+                    Response.Write("<script>alert('Employee data is not fetching!');</script>");
                 }
+                rdr.Close();
             }
+            int totalLeaves = LeaveCalculations.TotalLeaves(Convert.ToInt32(txtEmpNo.Text), lastDayOfLastMonth.Month, lastDayOfLastMonth.Year);
+            txtBalanceLeaves.Text = (totalLeaves > 2 ? 0 : 2 - totalLeaves).ToString();
+            txtLeavesTaken.Text = totalLeaves.ToString();
         }
 
         protected void btnCalculate_Click(object sender, EventArgs e)
         {
             // Calculate the salary based on input values
             int monthlySalary = 30000;
-            int totalWorkingDays = int.Parse(txtTotalWorkingDays.Text);
             int leavesTaken = int.Parse(txtLeavesTaken.Text);
-
+            leavesTaken = leavesTaken > 2 ? leavesTaken - 2 : 0;
             int salaryPerDay = monthlySalary / 30;
             int calculatedSalary = monthlySalary - (salaryPerDay * leavesTaken);
 
@@ -139,32 +120,42 @@ namespace EmpLeavesTask
             Response.Write("<script>alert('Payslip Generated Successfully!');</script>");
         }
 
-        private void SavePayslip(string filePath)
-        {
-            DateTime lastMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "INSERT INTO Payslips(month, year, emp_id, filepath) VALUES(@Month, @Year, @Empid, @Filepath)";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Month", lastMonth.Month);
-                    command.Parameters.AddWithValue("@Year", lastMonth.Year);
-                    command.Parameters.AddWithValue("@Empid", txtEmpNo.Text);
-                    command.Parameters.AddWithValue("@FilePath", filePath);
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
+        private byte[] GeneratePdfFromHtml(string htmlContent)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 10f, 10f, 10f, 10f);
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+
+                using (StringReader stringReader = new StringReader(htmlContent))
+                {
+                    XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, stringReader);
                 }
+
+                document.Close();
+                return memoryStream.ToArray();
             }
         }
 
-
-
-        public override void VerifyRenderingInServerForm(Control control)
+        private void SavePayslip(string filePath)
         {
-            // To avoid the exception "Control 'Panel1' of type 'Panel' must be placed inside a form tag with runat=server."
+            DateTime lastMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
+
+            string query = "INSERT INTO Payslips(month, year, emp_id, filepath) VALUES(@Month, @Year, @Empid, @Filepath)";
+            using (SqlCommand command = new SqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@Month", lastMonth.Month);
+                command.Parameters.AddWithValue("@Year", lastMonth.Year);
+                command.Parameters.AddWithValue("@Empid", txtEmpNo.Text);
+                command.Parameters.AddWithValue("@FilePath", filePath);
+
+                command.ExecuteNonQuery();
+            }
+
         }
 
+        public override void VerifyRenderingInServerForm(Control control) { }
     }
 }

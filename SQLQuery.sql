@@ -88,8 +88,6 @@ GO
 TRUNCATE TABLE LeaveApplication;
 GO
 
-SELECT * FROM LeaveApplication;
-GO
 CREATE TABLE LeaveApplication(
     leave_id int primary key identity,
     fromdate VARCHAR(20),
@@ -103,6 +101,11 @@ CREATE TABLE LeaveApplication(
     leave_status varchar(10)
 );
 GO
+SELECT * FROM LeaveApplication;
+GO
+
+exec GetCountOfLeaves 1 ,6, 2024;
+go
 
 CREATE PROCEDURE InsertLeaveApplication
     @fromdate VARCHAR(20),
@@ -143,6 +146,24 @@ BEGIN
     WHERE e.emp_id = @EmployeeId;
 END;
 Go
+
+alter PROCEDURE GetCountOfLeaves
+    @EmployeeId INT,
+    @month INT,
+    @year INT
+    AS BEGIN
+        -- Set NOCOUNT ON to prevent extra result sets from interfering with SELECT statements.
+        SET NOCOUNT ON;
+
+        -- Select the count of leaves for the given employee ID.
+        SELECT SUM(countofleaves) AS countofleaves
+        FROM LeaveApplication
+        WHERE emp_id = @EmployeeId AND month=@month AND year=@year AND leave_status='Approved';
+    END;
+GO
+
+exec GetCountOfLeaves 1 ,6, 2024;
+go
 
 CREATE PROCEDURE UpdateLeaveStatus
     @RequestId INT,

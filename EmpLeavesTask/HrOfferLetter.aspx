@@ -5,7 +5,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <div style="margin: 0 auto; max-width: 400px; padding-top: 50px;">
-            <h2 class="text-center">Offer Letter Generator</h2>
+            <h2 class="text-center">Offer Letter</h2>
+            <div class="form-group">
+                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" placeholder="Name"></asp:TextBox>
+            </div>
             <div class="form-group">
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Email"></asp:TextBox>
             </div>
@@ -19,7 +22,7 @@
                 <asp:Button ID="btnGenerateOfferLetter" runat="server" CssClass="btn btn-primary" Text="Generate Offer Letter" OnClick="btnGenerateOfferLetter_Click" />
             </div>
         </div>
-        <asp:Panel ID="pnlOfferLetter" runat="server" style="margin-top: 100px">
+        <asp:Panel ID="pnlOfferLetter" runat="server" Style="margin-top: 100px">
             <!-- Offer Letter Content -->
         </asp:Panel>
 
