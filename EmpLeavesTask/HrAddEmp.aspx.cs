@@ -50,7 +50,7 @@ namespace EmpLeavesTask
             }
             else
             {
-                ltAddEmployeeMessage.Text = "<div class='alert alert-danger'>Please fill in all fields.</div>";
+                ltAddEmployeeMessage.Text = "<div class='alert alert-danger'>Please fill in all fields correct</div>";
             }
         }
 

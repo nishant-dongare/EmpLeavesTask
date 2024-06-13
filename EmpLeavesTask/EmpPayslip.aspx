@@ -20,7 +20,13 @@
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
+
+            <HeaderStyle CssClass="thead-dark"></HeaderStyle>
         </asp:GridView>
-        <asp:SqlDataSource ID="db" runat="server" ConnectionString="<%$ ConnectionStrings:dbconn %>" SelectCommand="SELECT [payslip_id], [month], [year], [filepath] FROM [Payslips] ORDER BY [month]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="db" runat="server" ConnectionString="<%$ ConnectionStrings:dbconn %>" SelectCommand="SELECT [payslip_id], [month], [year], [filepath] FROM [Payslips] WHERE ([emp_id] = @emp_id) ORDER BY [year], [month]">
+            <SelectParameters>
+                <asp:SessionParameter Name="emp_id" SessionField="empId" Type="Int32" />
+            </SelectParameters>
+        </asp:SqlDataSource>
     </div>
 </asp:Content>

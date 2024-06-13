@@ -1,8 +1,8 @@
-use master;
+--use master;
 go
- alter database Task1 set single_user with rollback immediate
+-- alter database Task1 set single_user with rollback immediate
 
- drop database Task1
+-- drop database Task1
 
 Create database Task1;
 GO
@@ -14,7 +14,7 @@ DROP TABLE Employee;
 CREATE TABLE Employee(
 	emp_id int primary key identity,
     ename varchar(100),
-	email varchar(100),
+	email varchar(100) UNIQUE,
     passkey varchar(20),
 	contact decimal(10,0),
 	doj VARCHAR(20)
@@ -59,6 +59,10 @@ BEGIN
 END;
 GO
 
+exec GetEmployeeById 1
+go
+-----------------------------------------------
+
 CREATE PROCEDURE UpdateEmployee
     @emp_id INT,
     @ename VARCHAR(100),
@@ -85,7 +89,7 @@ END
 GO
 
 -------------------------------------------------------------------------------------------------------------------------------------
-TRUNCATE TABLE LeaveApplication;
+DROP TABLE LeaveApplication;
 GO
 
 CREATE TABLE LeaveApplication(
@@ -147,7 +151,7 @@ BEGIN
 END;
 Go
 
-alter PROCEDURE GetCountOfLeaves
+create PROCEDURE GetCountOfLeaves
     @EmployeeId INT,
     @month INT,
     @year INT
@@ -175,7 +179,7 @@ BEGIN
     WHERE leave_id = @RequestId;
 END
 ------------------------------------------------------------------------------------------------------------------
-drop table OfferLetters;
+--drop table OfferLetters;
 CREATE TABLE OfferLetters(
     offer_id INT PRIMARY KEY IDENTITY,
     name VARCHAR(100),
@@ -200,13 +204,31 @@ GO
 SELECT * FROM Payslips;
 go
 
-CREATE PROCEDURE InsertPayslip
-    @month VARCHAR(100),
-    @year VARCHAR(100),
-    @emp_id INT,
-    @filepath VARCHAR(100)
+--DROP table Payslips;
+
+CREATE PROCEDURE InsertOrUpdatePayslip
+    @Month INT,
+    @Year INT,
+    @Empid INT,
+    @Filepath NVARCHAR(MAX)
 AS
 BEGIN
-    INSERT INTO Payslips (month, year, emp_id, filepath)
-    VALUES (@month, @year, @emp_id, @filepath);
+    -- Check if a record already exists for the given month, year, and employee ID
+    IF EXISTS (
+        SELECT 1
+        FROM Payslips
+        WHERE month = @Month AND year = @Year AND emp_id = @Empid
+    )
+    BEGIN
+        -- Update the existing record
+        UPDATE Payslips
+        SET filepath = @Filepath
+        WHERE month = @Month AND year = @Year AND emp_id = @Empid;
+    END
+    ELSE
+    BEGIN
+        -- Insert a new record
+        INSERT INTO Payslips (month, year, emp_id, filepath)
+        VALUES (@Month, @Year, @Empid, @Filepath);
+    END
 END;

@@ -5,7 +5,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="addEmployee" class="mt-4">
-        <div class="card">
+        <div class="card" style="margin: 0 auto; max-width: 400px; padding-top: 50px;">
             <div class="card-header">
                 <h3 class="text-center">Add Employee</h3>
             </div>

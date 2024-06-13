@@ -23,7 +23,7 @@ namespace EmpLeavesTask
 
         protected void btnGenerateOfferLetter_Click(object sender, EventArgs e)
         {
-            string name = "NAME";
+            string name = txtName.Text;
             string email = txtEmail.Text;
             string contact = txtContact.Text;
             string doj = txtDateOfJoining.Text;
@@ -39,7 +39,7 @@ namespace EmpLeavesTask
             //Stores into db
             SaveOfferLetterDetails(name, email,contact, doj, filePath);
 
-            // Optionally, you can also email the PDF here
+            // Email the PDF here
             string directoryPath = Server.MapPath("~/OfferLetters/");
             string filepath1 = Path.Combine(directoryPath, email+".pdf");
             if (EmailManager.SendEmailWithPDF(email, filepath1))
