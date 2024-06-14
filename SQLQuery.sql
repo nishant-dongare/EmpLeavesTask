@@ -15,9 +15,10 @@ CREATE TABLE Employee(
 	emp_id int primary key identity,
     ename varchar(100),
 	email varchar(100) UNIQUE,
-    passkey varchar(20),
+    passkey varchar(100),
 	contact decimal(10,0),
-	doj VARCHAR(20)
+	doj VARCHAR(20),
+    erole VARCHAR(20)
 );
 GO
 
@@ -27,13 +28,14 @@ Go
 CREATE PROCEDURE AddEmployee
     @Name VARCHAR(100),
     @Email VARCHAR(100),
-    @Passkey varchar(20),
+    @Passkey varchar(100),
     @Contact DECIMAL(10,0),
-    @DOJ DATETIME
+    @DOJ DATETIME,
+    @Role VARCHAR(100)
 AS
 BEGIN
-    INSERT INTO Employee (ename,email,passkey, contact, doj)
-    VALUES (@Name,@Email,@Passkey, @Contact, @DOJ);
+    INSERT INTO Employee (ename,email,passkey, contact, doj,erole)
+    VALUES (@Name,@Email,@Passkey, @Contact, @DOJ,@Role);
     SELECT SCOPE_IDENTITY();
 END;
 GO
@@ -87,7 +89,18 @@ BEGIN
     DELETE FROM Employee WHERE emp_id = @EmpID
 END
 GO
+-------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------ AUTH -------------------------------------------------------
+CREATE PROC AuthLogin
+@uid varchar(100),
+@passkey varchar(100)
+as
+begin
+Select * from Employee where (email=@uid or ename = @uid) and passkey=@passkey;
+end
+Go
 
+EXEC AuthLogin 'naqifahijabu@rungel.net','naqifahijabu@rungel';
 -------------------------------------------------------------------------------------------------------------------------------------
 DROP TABLE LeaveApplication;
 GO
@@ -231,4 +244,54 @@ BEGIN
         INSERT INTO Payslips (month, year, emp_id, filepath)
         VALUES (@Month, @Year, @Empid, @Filepath);
     END
+END;
+go
+------------------------------------------------------------------ TICKET -----------------------------------------------------------
+CREATE TABLE RaiseTicket(
+    ticket_id int primary key identity,
+    raised_to int references Employee(emp_id),
+    raised_by int references Employee(emp_id),
+    ticket varchar(max),
+    attachment varchar(max),
+    ticket_date DATETIME DEFAULT GETDATE()
+);
+go
+
+SELECT * FROM RaiseTicket;
+GO
+CREATE PROCEDURE CreateRaiseTicket
+    @raised_to INT,
+    @raised_by INT,
+    @ticket VARCHAR(MAX),
+    @attachment VARCHAR(MAX)
+AS
+BEGIN
+    INSERT INTO RaiseTicket (raised_to, raised_by, ticket, attachment)
+    VALUES (@raised_to, @raised_by, @ticket, @attachment);
+END;
+go
+
+CREATE PROCEDURE GetEmployeesByRole
+    @role NVARCHAR(50)
+AS
+BEGIN
+    SELECT emp_id, ename 
+    FROM Employee 
+    WHERE erole = @role;
+END;
+-----------------------------------------------------------Solution-----------------------
+CREATE TABLE Solution(
+    solution_id int primary key identity,
+    ticket_id int references RaiseTicket(ticket_id),
+    ticket_solution varchar(max),
+    solution_date DATETIME DEFAULT GETDATE()
+);
+go
+CREATE PROCEDURE AddTicketSolution
+    @ticket_id int,
+    @ticket_solution varchar(max)
+AS
+BEGIN
+    INSERT INTO Solution (ticket_id, ticket_solution, solution_date)
+    VALUES (@ticket_id, @ticket_solution, GETDATE());
 END;

@@ -13,6 +13,10 @@ namespace EmpLeavesTask
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack && Session["emp_id"] ==null)
+            {
+                Response.Redirect("Login.aspx");
+            }
             //pnlOfferLetter.Visible = false;
             LoadOfferLetter();
 

@@ -12,37 +12,47 @@ namespace EmpLeavesTask
     public partial class Login : System.Web.UI.Page
     {
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-        int result;
         protected void Page_Load(object sender, EventArgs e) { }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string uid = txtUsername.Text;
             string pass = txtPassword.Text;
-
-            if (isAdmin(uid, pass))
-            {
-                // Redirect to a different page upon successful login
-                Response.Redirect("HrFetchEmp.aspx");
-            }
-            else if (isValidUser(uid,pass, out result))
-            {
-                Session["empId"] = result;
-                Session["uid"] = uid;
-                Response.Redirect($@"EmpLeaveApply.aspx?empId={result}");
-            }
-            else
+            string role = isValidUser(uid, pass);
+            if (role == null)
             {
                 ltMessage.Text = "<div class='alert alert-danger'>Invalid username or password</div>";
             }
+            else if (role == "hr")
+            {
+                Response.Redirect("HrFetchEmp.aspx");
+            }
+            else
+            {
+                Response.Redirect($@"EmpLeaveApply.aspx");
+            }
         }
 
-        private bool isAdmin(string uid, string password)
+        private string isValidUser(string uid, string passkey)
         {
-            return uid == "admin" && password == "admin";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand($@"EXEC AuthLogin '{uid}','{passkey}'", conn))
+                {
+                    conn.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.HasRows) { 
+                        rdr.Read();
+                        Session["emp_id"] = rdr["emp_id"];
+                        Session["email"] = rdr["email"];
+                        return rdr["erole"].ToString();
+                    }
+                    return null;
+                }
+            }
         }
 
-        private bool isValidUser(string uid,string passkey,out int result)
+        /*private bool isValidUser(string uid,string passkey,out int result)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -53,7 +63,6 @@ namespace EmpLeavesTask
                     return result > 0;
                 }
             }
-        }
-
+        }*/
     }
 }

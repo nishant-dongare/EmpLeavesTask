@@ -15,7 +15,7 @@
     <AssemblyName>EmpLeavesTask</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>true</Use64BitIISExpress>
     <IISExpressSSLPort>44310</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -83,6 +83,10 @@
     <Content Include="HrPayslip.aspx" />
     <Content Include="LeaveApplication.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="Register.aspx" />
+    <Content Include="Ticket\TicketRaiseForm.aspx" />
+    <Content Include="Ticket\TicketSolution.aspx" />
+    <Content Include="Ticket\ViewTickets.aspx" />
     <Content Include="User.aspx" />
     <Content Include="HrViewEmp.aspx" />
     <Content Include="Web.config" />
@@ -175,6 +179,34 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ticket\TicketRaiseForm.aspx.cs">
+      <DependentUpon>TicketRaiseForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ticket\TicketRaiseForm.aspx.designer.cs">
+      <DependentUpon>TicketRaiseForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ticket\TicketSolution.aspx.cs">
+      <DependentUpon>TicketSolution.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ticket\TicketSolution.aspx.designer.cs">
+      <DependentUpon>TicketSolution.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ticket\ViewTickets.aspx.cs">
+      <DependentUpon>ViewTickets.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ticket\ViewTickets.aspx.designer.cs">
+      <DependentUpon>ViewTickets.aspx</DependentUpon>
+    </Compile>
     <Compile Include="User.aspx.cs">
       <DependentUpon>User.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

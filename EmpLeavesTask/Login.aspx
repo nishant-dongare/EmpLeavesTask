@@ -34,6 +34,10 @@
                                         <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" placeholder="Enter password"></asp:TextBox>
                                     </asp:Panel>
                                     <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn btn-primary btn-block" OnClick="btnLogin_Click" />
+                                    <div>
+                                        New user?
+                                        <asp:HyperLink ID="lnkRegister" runat="server" NavigateUrl="Register.aspx" Text="Register here" />
+                                    </div>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                         </div>
