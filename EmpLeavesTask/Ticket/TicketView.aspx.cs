@@ -10,10 +10,7 @@ namespace EmpLeavesTask.Ticket
 {
     public partial class ViewTickets : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
+        protected void Page_Load(object sender, EventArgs e){}
 
         protected void DownloadAttachmentRowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -27,7 +24,7 @@ namespace EmpLeavesTask.Ticket
                 if (litDownload != null)
                 {
                     litDownload.Text = $"<a href ='{ResolveUrl(filepath)}' class='btn btn-dark' download>Download</a>";
-                    litCloseSolution.Text = $"<a href ='{ResolveUrl(ticketId)}' class='btn btn-dark'>Close Solution</a>";
+                    litCloseSolution.Text = $"<a href ='TicketSolution.aspx?ticketId={ticketId}' class='btn btn-dark'>Close Solution</a>";
                 }
             }
         }

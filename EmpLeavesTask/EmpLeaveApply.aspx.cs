@@ -85,7 +85,7 @@ namespace EmpLeavesTask
 
                     extraLeaves = m1 + m2;
 
-                    int result = InsertIntoDB($@"EXEC InsertLeaveApplication '{fromDate}','{lastDateOfFromDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{m1WorkingDays}','{empId}','0'");
+                    int result = InsertIntoDB($"EXEC InsertLeaveApplication '{fromDate}','{lastDateOfFromDate}','{txtreason.Text}','{fromDate.Month}','{fromDate.Year}','{m1WorkingDays}','{empId}','0'");
                     if (result > 0)
                     {
                         InsertIntoDB($@"EXEC InsertLeaveApplication '{newMonthDate}','{toDate}','{txtreason.Text}','{toDate.Month}','{toDate.Year}','{m1WorkingDays}','{empId}','{result}'");

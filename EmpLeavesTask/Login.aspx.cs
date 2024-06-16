@@ -27,9 +27,13 @@ namespace EmpLeavesTask
             {
                 Response.Redirect("HrFetchEmp.aspx");
             }
+            else if(role == "admin")
+            {
+                Response.Redirect("Admin/AdminView.aspx");
+            }
             else
             {
-                Response.Redirect($@"EmpLeaveApply.aspx");
+                Response.Redirect($"EmpLeaveApply.aspx");
             }
         }
 
@@ -37,7 +41,7 @@ namespace EmpLeavesTask
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand($@"EXEC AuthLogin '{uid}','{passkey}'", conn))
+                using (SqlCommand cmd = new SqlCommand($"EXEC AuthLogin '{uid}','{passkey}'", conn))
                 {
                     conn.Open();
                     SqlDataReader rdr = cmd.ExecuteReader();
@@ -51,18 +55,5 @@ namespace EmpLeavesTask
                 }
             }
         }
-
-        /*private bool isValidUser(string uid,string passkey,out int result)
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand($@"SELECT emp_id FROM Employee WHERE email='{uid}' AND passkey='{passkey}'", con))
-                {
-                    con.Open();
-                    result = Convert.ToInt32(cmd.ExecuteScalar());
-                    return result > 0;
-                }
-            }
-        }*/
     }
 }

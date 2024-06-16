@@ -11,13 +11,13 @@ namespace EmpLeavesTask.Ticket
 {
     public partial class TicketSolution : System.Web.UI.Page
     {
-        string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        readonly string connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 // Assuming the ticket ID is passed as a query parameter
-                string ticketId = Request.QueryString["ticket_id"];
+                string ticketId = Request.QueryString["ticketId"];
                 if (!string.IsNullOrEmpty(ticketId))
                 {
                     LoadTicketDetails(int.Parse(ticketId));
@@ -64,7 +64,8 @@ namespace EmpLeavesTask.Ticket
             }
 
             // Redirect to a confirmation page or show a success message
-            Response.Redirect("SolutionConfirmation.aspx");
+            Response.Write("<script>alert('Ticket Closed')</script>");
+            Response.Redirect("TicketView.aspx");
         }
     }
 }

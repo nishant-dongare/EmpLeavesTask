@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\AdminView.aspx" />
     <Content Include="EmpLeaveApply.aspx" />
     <Content Include="EmpOfferLetterView.aspx" />
     <Content Include="EmpPayslip.aspx" />
@@ -86,12 +87,26 @@
     <Content Include="Register.aspx" />
     <Content Include="Ticket\TicketRaiseForm.aspx" />
     <Content Include="Ticket\TicketSolution.aspx" />
-    <Content Include="Ticket\ViewTickets.aspx" />
+    <Content Include="Ticket\TicketView.aspx" />
     <Content Include="User.aspx" />
     <Content Include="HrViewEmp.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\AdminView.aspx.cs">
+      <DependentUpon>AdminView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminView.aspx.designer.cs">
+      <DependentUpon>AdminView.aspx</DependentUpon>
+    </Compile>
     <Compile Include="EmailManager.cs" />
     <Compile Include="EmpLeaveApply.aspx.cs">
       <DependentUpon>EmpLeaveApply.aspx</DependentUpon>
@@ -200,12 +215,12 @@
     <Compile Include="Ticket\TicketSolution.aspx.designer.cs">
       <DependentUpon>TicketSolution.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Ticket\ViewTickets.aspx.cs">
-      <DependentUpon>ViewTickets.aspx</DependentUpon>
+    <Compile Include="Ticket\TicketView.aspx.cs">
+      <DependentUpon>TicketView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Ticket\ViewTickets.aspx.designer.cs">
-      <DependentUpon>ViewTickets.aspx</DependentUpon>
+    <Compile Include="Ticket\TicketView.aspx.designer.cs">
+      <DependentUpon>TicketView.aspx</DependentUpon>
     </Compile>
     <Compile Include="User.aspx.cs">
       <DependentUpon>User.aspx</DependentUpon>
@@ -225,6 +240,7 @@
   <ItemGroup>
     <Content Include="Hr.Master" />
     <Content Include="Employee.Master" />
+    <Content Include="Admin\Admin.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

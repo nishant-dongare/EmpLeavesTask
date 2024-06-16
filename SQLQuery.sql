@@ -25,6 +25,10 @@ GO
 SELECT * FROM Employee;
 Go
 
+INSERT INTO Employee (ename, email, passkey, contact, doj, erole) VALUES ('Admin', 'admin@gmail.com', 'admin', 9999999999, 'Jun 13 2024 12:00AM','admin');
+
+go
+
 CREATE PROCEDURE AddEmployee
     @Name VARCHAR(100),
     @Email VARCHAR(100),
@@ -279,19 +283,77 @@ BEGIN
     FROM Employee 
     WHERE erole = @role;
 END;
------------------------------------------------------------Solution-----------------------
-CREATE TABLE Solution(
+Go
+
+
+CREATE PROCEDURE ViewTickets
+    @RaisedTo INT
+    AS BEGIN
+        SELECT r.ticket_id,r.ticket,r.attachment,e.ename,r.ticket_date FROM Employee e INNER JOIN RaiseTicket r ON e.emp_id = r.raised_by WHERE r.raised_to=@RaisedTo;
+    END
+    GO
+-----------------------------------------------------------Solution-------------------------------------------------
+--DROP TABLE Solution;
+--CREATE TABLE Solution(
+--    solution_id int primary key identity,
+--    ticket_id int references RaiseTicket(ticket_id),
+--    ticket_solution varchar(max),
+--    solution_date DATETIME DEFAULT GETDATE()
+--);
+
+CREATE TABLE Solution (
     solution_id int primary key identity,
-    ticket_id int references RaiseTicket(ticket_id),
+    ticket_id int,
+    raised_to int,
+    raised_by int,
+    ticket varchar(max),
+    attachment varchar(max),
+    ticket_date DATETIME,
     ticket_solution varchar(max),
     solution_date DATETIME DEFAULT GETDATE()
 );
+GO
+
+go
+SELECT * FROM Solution;
+go
+
+CREATE PROCEDURE GetAllSolutions
+AS
+BEGIN
+    SELECT * FROM Solution;
+END;
+
+
+--CREATE PROCEDURE AddTicketSolution
+--    @ticket_id int,
+--    @ticket_solution varchar(max)
+--AS
+--BEGIN
+--    INSERT INTO Solution (ticket_id, ticket_solution, solution_date)
+--    VALUES (@ticket_id, @ticket_solution, GETDATE());
+--END;
+
+
 go
 CREATE PROCEDURE AddTicketSolution
     @ticket_id int,
     @ticket_solution varchar(max)
 AS
 BEGIN
-    INSERT INTO Solution (ticket_id, ticket_solution, solution_date)
-    VALUES (@ticket_id, @ticket_solution, GETDATE());
+    -- Check if the ticket exists in RaiseTicket
+    IF EXISTS (SELECT 1 FROM RaiseTicket WHERE ticket_id = @ticket_id)
+    BEGIN
+        -- Insert the data into Solution table
+        INSERT INTO Solution (ticket_id, raised_to, raised_by, ticket, attachment, ticket_date, ticket_solution)
+        SELECT ticket_id, raised_to, raised_by, ticket, attachment, ticket_date, @ticket_solution
+        FROM RaiseTicket
+        WHERE ticket_id = @ticket_id;
+
+        -- Delete the ticket from RaiseTicket
+        DELETE FROM RaiseTicket WHERE ticket_id = @ticket_id;
+
+    END
 END;
+GO
+

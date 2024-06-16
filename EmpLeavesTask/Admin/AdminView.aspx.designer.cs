@@ -7,47 +7,65 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EmpLeavesTask.Ticket
+namespace EmpLeavesTask.Admin
 {
 
 
-    public partial class TicketSolution
+    public partial class AdminView
     {
 
         /// <summary>
-        /// ticketIdTb control.
+        /// ltMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ticketIdTb;
+        protected global::System.Web.UI.WebControls.Literal ltMessage;
 
         /// <summary>
-        /// ticketTb control.
+        /// tb_fromdate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ticketTb;
+        protected global::System.Web.UI.WebControls.TextBox tb_fromdate;
 
         /// <summary>
-        /// solutionTb control.
+        /// tb_todate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox solutionTb;
+        protected global::System.Web.UI.WebControls.TextBox tb_todate;
 
         /// <summary>
-        /// submitSolution control.
+        /// Button1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button submitSolution;
+        protected global::System.Web.UI.WebControls.Button Button1;
+
+        /// <summary>
+        /// GridView1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView1;
+
+        /// <summary>
+        /// Solution control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource Solution;
     }
 }
