@@ -85,6 +85,7 @@
     <Content Include="LeaveApplication.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Register.aspx" />
+    <Content Include="Ticket\SolutionsView.aspx" />
     <Content Include="Ticket\TicketRaiseForm.aspx" />
     <Content Include="Ticket\TicketSolution.aspx" />
     <Content Include="Ticket\TicketView.aspx" />
@@ -107,6 +108,7 @@
     <Compile Include="Admin\AdminView.aspx.designer.cs">
       <DependentUpon>AdminView.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="EmailManager.cs" />
     <Compile Include="EmpLeaveApply.aspx.cs">
       <DependentUpon>EmpLeaveApply.aspx</DependentUpon>
@@ -200,6 +202,13 @@
     </Compile>
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ticket\SolutionsView.aspx.cs">
+      <DependentUpon>SolutionsView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ticket\SolutionsView.aspx.designer.cs">
+      <DependentUpon>SolutionsView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Ticket\TicketRaiseForm.aspx.cs">
       <DependentUpon>TicketRaiseForm.aspx</DependentUpon>

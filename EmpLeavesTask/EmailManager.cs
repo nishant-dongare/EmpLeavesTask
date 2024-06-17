@@ -11,7 +11,7 @@ namespace EmpLeavesTask
     {
         public static bool SendEmailWithPDF(string email,string filepath)
         {
-            string fromEmail = "nishantdongare2001@gmail.com";
+            string fromEmail = Constants.EMAILID;
             string fileName = $"{email}.pdf";
             string subject = "Letter";
             string body = "Dear Candidate,\n\nPlease find your Attchment.\n\nBest regards,\nYour Company";
@@ -31,7 +31,7 @@ namespace EmpLeavesTask
 
                 using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    smtp.Credentials = new NetworkCredential("nishantdongare2001@gmail.com", "claw phrq grcm dqok");
+                    smtp.Credentials = new NetworkCredential(Constants.EMAILID, Constants.PASSKEY);
                     smtp.EnableSsl = true;
                     try
                     {

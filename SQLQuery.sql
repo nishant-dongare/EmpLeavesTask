@@ -323,6 +323,17 @@ AS
 BEGIN
     SELECT * FROM Solution;
 END;
+GO
+
+CREATE PROCEDURE GetSolutionByEmpId
+    @raised_by INT
+AS
+BEGIN
+    -- Fetch the solution by ID
+    SELECT * FROM Solution
+    WHERE raised_by = @raised_by;
+END
+GO
 
 
 --CREATE PROCEDURE AddTicketSolution
@@ -353,6 +364,54 @@ BEGIN
         -- Delete the ticket from RaiseTicket
         DELETE FROM RaiseTicket WHERE ticket_id = @ticket_id;
 
+    END
+END;
+GO
+
+CREATE PROCEDURE GetSolutionsByDateRange
+    @DateRangeType NVARCHAR(10)
+AS
+BEGIN
+    DECLARE @StartDate DATETIME;
+    DECLARE @EndDate DATETIME = GETDATE();
+
+    IF @DateRangeType = 'Daily'
+    BEGIN
+        SET @StartDate = CONVERT(DATE, @EndDate);
+        SET @EndDate = CONVERT(DATE, @EndDate);
+    END
+    ELSE IF @DateRangeType = 'Weekly'
+    BEGIN
+        SET @StartDate = DATEADD(DAY, 1 - DATEPART(WEEKDAY, @EndDate), CONVERT(DATE, @EndDate));
+        SET @EndDate = DATEADD(DAY, 8 - DATEPART(WEEKDAY, @EndDate), CONVERT(DATE, @EndDate));
+    END
+    ELSE IF @DateRangeType = 'Monthly'
+    BEGIN
+        SET @StartDate = DATEFROMPARTS(YEAR(@EndDate), MONTH(@EndDate), 1);
+        SET @EndDate = EOMONTH(@EndDate);
+    END
+    ELSE
+    BEGIN
+        -- If the DateRangeType is not valid, return an empty result set
+        SET @StartDate = NULL;
+    END
+
+    IF @StartDate IS NOT NULL
+    BEGIN
+        SELECT 
+            s.ticket_id,
+            s.raised_by,
+            rb.ename AS raised_by_name,
+            s.raised_to,
+            rt.ename AS raised_to_name,
+            s.ticket AS ticket_description,
+            s.ticket_solution AS solution,
+            s.ticket_date AS raised_date,
+            s.solution_date AS closed_date
+        FROM Solution s
+        LEFT JOIN Employee rb ON s.raised_by = rb.emp_id
+        LEFT JOIN Employee rt ON s.raised_to = rt.emp_id
+        WHERE s.solution_date BETWEEN @StartDate AND @EndDate;
     END
 END;
 GO
