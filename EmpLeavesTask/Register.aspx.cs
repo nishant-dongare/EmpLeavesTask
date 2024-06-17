@@ -68,5 +68,26 @@ namespace EmpLeavesTask
                 }
             }
         }
+
+        private string GenerateOTP()
+        {
+            Random rnd = new Random();
+            return rnd.Next(100000, 999999).ToString(); // Generate a 6-digit OTP
+        }
+
+        private void StoreOTPInSession(string email, string otp)
+        {
+            // Store OTP in session (for demonstration; ideally store in database)
+            Session[email + "_otp"] = otp;
+        }
+
+
+        public void reset()
+        {
+            txtEmployeeName.Text = "";
+            txtEmployeeEmail.Text = "";
+            txtEmployeeContact.Text = "";
+            txtPassword.Text = "";
+        }
     }
 }

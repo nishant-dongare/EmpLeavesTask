@@ -2,7 +2,67 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <style>
+        .gridview-header {
+            background-color: #007BFF;
+            color: white;
+        }
+        .gridview-row {
+            background-color: #f8f9fa;
+        }
+        .gridview-row:hover {
+            background-color: #e9ecef;
+        }
+        .gridview-selected {
+            background-color: #007BFF;
+            color: white;
+        }
+        .form-control.w-50 {
+            max-width: 50%;
+        }
+    </style>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">View Solution Tickets</h1>
+        <div class="form-group row">
+            <label for="ddlViewBy" class="col-sm-2 col-form-label">View by:</label>
+            <div class="col-sm-4">
+                <asp:DropDownList ID="ddlViewBy" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlViewBy_SelectedIndexChanged" CssClass="form-control w-100">
+                    <asp:ListItem Text="Daily" Value="Daily"></asp:ListItem>
+                    <asp:ListItem Text="Weekly" Value="Weekly"></asp:ListItem>
+                    <asp:ListItem Text="Monthly" Value="Monthly"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <div class="col-sm-6 text-right">
+                <asp:Button ID="btnExport" runat="server" Text="Export to CSV" OnClick="btnExport_Click" CssClass="btn btn-primary" />
+            </div>
+        </div>
+        
+        <asp:GridView ID="GridViewClosedTickets" runat="server" AutoGenerateColumns="False" DataKeyNames="ticket_id" CssClass="table table-bordered table-hover">
+            <Columns>
+                <asp:BoundField DataField="ticket_id" HeaderText="Ticket ID" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+                <asp:BoundField DataField="raised_by_name" HeaderText="Raised By" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+                <asp:BoundField DataField="raised_to_name" HeaderText="Raised To" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+                <asp:BoundField DataField="ticket_description" HeaderText="Ticket Description" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+                <asp:BoundField DataField="solution" HeaderText="Solution" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+                <asp:BoundField DataField="closed_date" HeaderText="Closed Date" HeaderStyle-CssClass="gridview-header" ItemStyle-CssClass="gridview-row" />
+            </Columns>
+            <FooterStyle CssClass="gridview-footer" />
+            <HeaderStyle CssClass="gridview-header" />
+            <PagerStyle CssClass="gridview-pager" />
+            <RowStyle CssClass="gridview-row" />
+            <SelectedRowStyle CssClass="gridview-selected" />
+            <SortedAscendingCellStyle CssClass="gridview-sorted-ascending" />
+            <SortedAscendingHeaderStyle CssClass="gridview-sorted-ascending-header" />
+            <SortedDescendingCellStyle CssClass="gridview-sorted-descending" />
+            <SortedDescendingHeaderStyle CssClass="gridview-sorted-descending-header" />
+        </asp:GridView>
+    </div>
+</asp:Content>
+
+
+<%--<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
       <h1 class="text-center">View Closed Tickets</h1>
   <div class="container">
         <div class="form-group">
@@ -34,21 +94,4 @@
           <SortedDescendingHeaderStyle BackColor="#00547E" />
       </asp:GridView>
   </div>
-
-    <%--<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="solution_id" DataSourceID="Solution">
-        <Columns>
-            <asp:BoundField DataField="solution_id" HeaderText="solution_id" InsertVisible="False" ReadOnly="True" SortExpression="solution_id" />
-            <asp:BoundField DataField="ticket_id" HeaderText="ticket_id" SortExpression="ticket_id" />
-            <asp:BoundField DataField="raised_to" HeaderText="raised_to" SortExpression="raised_to" />
-            <asp:BoundField DataField="raised_by" HeaderText="raised_by" SortExpression="raised_by" />
-            <asp:BoundField DataField="ticket" HeaderText="ticket" SortExpression="ticket" />
-            <asp:BoundField DataField="ticket_solution" HeaderText="ticket_solution" SortExpression="ticket_solution" />
-            <asp:BoundField DataField="ticket_date" HeaderText="ticket_date" SortExpression="ticket_date" />
-            <asp:BoundField DataField="solution_date" HeaderText="solution_date" SortExpression="solution_date" />
-            <asp:BoundField DataField="attachment" HeaderText="attachment" SortExpression="attachment" />
-        </Columns>
-    </asp:GridView>--%>
-
-    <%--<asp:SqlDataSource ID="Solution" runat="server" ConnectionString="<%$ ConnectionStrings:dbconn %>" SelectCommand="GetAllSolutions" SelectCommandType="StoredProcedure"></asp:SqlDataSource>--%>
-
-</asp:Content>
+</asp:Content>--%>
