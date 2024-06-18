@@ -4,28 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Register Employee</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
+    <<%--script>
         $(document).ready(function () {
             $('#btnAddEmployee').click(function (e) {
                 e.preventDefault();
                 $('#otpModal').modal('show');
             });
-
-            $('#btnVerifyOTP').click(function () {
-                // Add your OTP verification logic here
-                var enteredOTP = $('#txtOTP').val();
-                if (enteredOTP === '123456') { // Replace with actual verification logic
-                    $('#form1').submit(); // Proceed with form submission
-                } else {
-                    alert('Invalid OTP. Please try again.');
-                }
-            });
         });
-    </script>
+    </script>--%>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -66,7 +56,7 @@
                                 <asp:ListItem Text="Trainee" Value="trainee"></asp:ListItem>
                             </asp:DropDownList>
                         </asp:Panel>
-                        <asp:Button ID="btnAddEmployee" runat="server" Text="Add Employee" CssClass="btn btn-primary btn-block" />
+                        <asp:Button ID="btnAddEmployee" runat="server" Text="Add Employee" CssClass="btn btn-primary btn-block" OnClick="btnAddEmployee_Click" />
                         <div class="mt-3">
                             New user?
                             <asp:HyperLink ID="lnkRegister" runat="server" NavigateUrl="Login.aspx" Text="Login here" />
@@ -89,12 +79,12 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="txtOTP">Enter OTP</label>
-                            <input type="text" id="txtOTP" class="form-control" placeholder="Enter OTP">
+                            <asp:TextBox ID="txtOTP" runat="server" CssClass="form-control" placeholder="Enter OTP"></asp:TextBox>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" id="btnVerifyOTP" class="btn btn-primary">Verify OTP</button>
+                        <asp:Button ID="btnVerifyOTP" runat="server" Text="Verify OTP" CssClass="btn btn-primary" OnClick="btnVerifyOTP_Click" />
                     </div>
                 </div>
             </div>

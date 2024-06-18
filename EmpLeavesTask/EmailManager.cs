@@ -49,5 +49,26 @@ namespace EmpLeavesTask
             }
 
         }
+
+
+        internal static void SendOtpEmail(string email, string otp)
+        {
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(Constants.EMAILID);
+                mail.To.Add(email);
+                mail.Subject = "Your OTP Code";
+                mail.Body = $"Your OTP code is {otp}";
+                mail.IsBodyHtml = false;
+
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential(Constants.EMAILID, Constants.PASSKEY);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
+        }
+
     }
 }

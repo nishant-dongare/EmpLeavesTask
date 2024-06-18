@@ -17,7 +17,7 @@ namespace EmpLeavesTask
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string uid = txtUsername.Text;
-            string pass = txtPassword.Text;
+            string pass = Register.HashPassword(txtPassword.Text);
             string role = isValidUser(uid, pass);
             if (role == null)
             {

@@ -22,6 +22,8 @@ CREATE TABLE Employee(
 );
 GO
 
+--DELETE FROM Employee WHERE emp_id = 6;
+
 SELECT * FROM Employee;
 Go
 
